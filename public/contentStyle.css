@@ -1,4 +1,20 @@
 
+/* Debug outline to see if styles are loaded */
+body.linkedin-zen-mode {
+  position: relative;
+}
+
+body.linkedin-zen-mode::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 5px;
+  background-color: #0A66C2;
+  z-index: 9999;
+}
+
 /* Hide the main feed */
 .linkedin-zen-mode .feed-shared-update-v2,
 .linkedin-zen-mode .scaffold-finite-scroll,
@@ -42,4 +58,26 @@
   margin: 0 auto !important;
   width: 80% !important;
   max-width: 700px !important;
+}
+
+/* Additional selectors for feed items (LinkedIn may use different class names) */
+.linkedin-zen-mode .feed-shared-update-v2__description-wrapper,
+.linkedin-zen-mode .update-components-actor,
+.linkedin-zen-mode .update-components-actor__container,
+.linkedin-zen-mode .feed-shared-actor,
+.linkedin-zen-mode .feed-shared-actor__container,
+.linkedin-zen-mode .feed-shared-actor__title,
+.linkedin-zen-mode .feed-shared-actor__description,
+.linkedin-zen-mode .feed-shared-actor__sub-description,
+.linkedin-zen-mode .update-components-actor__meta-link,
+.linkedin-zen-mode .update-components-text-view,
+.linkedin-zen-mode .update-components-image,
+.linkedin-zen-mode .update-components-article,
+.linkedin-zen-mode .feed-shared-mini-update-v2,
+.linkedin-zen-mode .feed-shared-article,
+.linkedin-zen-mode .feed-shared-external-article,
+.linkedin-zen-mode .feed-shared-image,
+.linkedin-zen-mode .feed-shared-poll,
+.linkedin-zen-mode .feed-shared-text {
+  display: none !important;
 }
