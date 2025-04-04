@@ -1,0 +1,45 @@
+
+/* Hide the main feed */
+.linkedin-zen-mode .feed-shared-update-v2,
+.linkedin-zen-mode .scaffold-finite-scroll,
+.linkedin-zen-mode .feed-shared-carousel,
+.linkedin-zen-mode .feed-shared-update-v2,
+.linkedin-zen-mode .feed-shared-news {
+  display: none !important;
+}
+
+/* Hide the right sidebar */
+.linkedin-zen-mode .scaffold-layout__aside,
+.linkedin-zen-mode .ad-banner-container,
+.linkedin-zen-mode .feed-follows-module,
+.linkedin-zen-mode .premium-upsell-link {
+  display: none !important;
+}
+
+/* Hide notification feed and other distracting elements */
+.linkedin-zen-mode .notifications-tab,
+.linkedin-zen-mode .msg-overlay-container,
+.linkedin-zen-mode .feed-identity-module {
+  display: none !important;
+}
+
+/* Clean up the home page */
+.linkedin-zen-mode .feed-shared-news-module,
+.linkedin-zen-mode .feed-shared-news-module__title,
+.linkedin-zen-mode .scaffold-layout__main {
+  width: 100% !important;
+  max-width: 100% !important;
+}
+
+/* Keep the navigation bar and post creation visible */
+.linkedin-zen-mode .global-nav,
+.linkedin-zen-mode .share-box {
+  display: block !important;
+}
+
+/* Center the post creation box */
+.linkedin-zen-mode .share-box-feed-entry {
+  margin: 0 auto !important;
+  width: 80% !important;
+  max-width: 700px !important;
+}
