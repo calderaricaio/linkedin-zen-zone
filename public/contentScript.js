@@ -1,41 +1,27 @@
-
 // Add console logs for debugging
 console.log('LinkedIn Zen Zone content script loaded');
 
-let focusModeEnabled = false;
+// Always enable focus mode
+let focusModeEnabled = true;
 
-// Function to toggle focus mode
-function toggleFocusMode(enabled) {
-  console.log('Toggle focus mode called with enabled:', enabled);
-  focusModeEnabled = enabled;
+// Function to apply focus mode
+function applyFocusMode() {
+  console.log('Applying focus mode automatically');
+  document.body.classList.add('linkedin-zen-mode');
   
-  if (enabled) {
-    console.log('Adding linkedin-zen-mode class to body');
-    document.body.classList.add('linkedin-zen-mode');
-  } else {
-    console.log('Removing linkedin-zen-mode class from body');
-    document.body.classList.remove('linkedin-zen-mode');
+  // Make sure the indicator is shown
+  if (indicator) {
+    indicator.style.display = 'block';
   }
 }
 
-// Listen for messages from the popup
+// Listen for messages from the popup (keeping for compatibility)
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   console.log('Message received in content script:', message);
-  if (message.action === 'toggleFocusMode') {
-    toggleFocusMode(message.enabled);
-    sendResponse({success: true, enabled: focusModeEnabled});
-  } else if (message.action === 'getState') {
-    sendResponse({enabled: focusModeEnabled});
+  if (message.action === 'getState') {
+    sendResponse({enabled: true});
   }
   return true;
-});
-
-// Check stored state when the content script loads
-chrome.storage.local.get(['focusModeEnabled'], (result) => {
-  console.log('Retrieved stored state:', result);
-  if (result.focusModeEnabled !== undefined) {
-    toggleFocusMode(result.focusModeEnabled);
-  }
 });
 
 // Add a small indicator that the extension is active
@@ -50,13 +36,28 @@ indicator.style.borderRadius = '5px';
 indicator.style.zIndex = '9999';
 indicator.style.fontSize = '12px';
 indicator.textContent = 'LinkedIn Zen Zone Active';
-indicator.style.display = 'none';
+indicator.style.display = 'block';
 
-document.body.appendChild(indicator);
+// Apply focus mode when the page loads or when DOM is ready
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', () => {
+    document.body.appendChild(indicator);
+    applyFocusMode();
+  });
+} else {
+  document.body.appendChild(indicator);
+  applyFocusMode();
+}
 
-// Update the toggle function to also show/hide the indicator
-const originalToggle = toggleFocusMode;
-toggleFocusMode = function(enabled) {
-  originalToggle(enabled);
-  indicator.style.display = enabled ? 'block' : 'none';
-};
+// Also apply focus mode when the body changes (for SPAs like LinkedIn)
+const observer = new MutationObserver(() => {
+  if (!document.body.classList.contains('linkedin-zen-mode')) {
+    applyFocusMode();
+  }
+});
+
+// Start observing the document body for DOM changes
+observer.observe(document.body, { 
+  childList: true,
+  subtree: true
+});
