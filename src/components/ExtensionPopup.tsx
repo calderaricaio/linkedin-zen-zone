@@ -7,53 +7,69 @@ import FocusToggle from './FocusToggle';
 const ExtensionPopup: React.FC = () => {
   const [focusModeEnabled, setFocusModeEnabled] = useState(false);
   const [isLinkedIn, setIsLinkedIn] = useState(false);
+  const [isExtensionEnvironment, setIsExtensionEnvironment] = useState(false);
 
+  // Check if we're in a Chrome extension environment
   useEffect(() => {
-    // Check if we're on LinkedIn
-    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-      const currentUrl = tabs[0]?.url || '';
-      setIsLinkedIn(currentUrl.includes('linkedin.com'));
+    // Check if chrome.tabs is available (extension environment)
+    if (typeof chrome !== 'undefined' && chrome.tabs) {
+      setIsExtensionEnvironment(true);
       
-      // If we're on LinkedIn, get the current state
-      if (currentUrl.includes('linkedin.com')) {
-        chrome.tabs.sendMessage(
-          tabs[0].id!,
-          { action: 'getState' },
-          (response) => {
-            if (response) {
-              setFocusModeEnabled(response.enabled);
+      // Only run Chrome API code if we're in an extension environment
+      chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+        const currentUrl = tabs[0]?.url || '';
+        setIsLinkedIn(currentUrl.includes('linkedin.com'));
+        
+        // If we're on LinkedIn, get the current state
+        if (currentUrl.includes('linkedin.com')) {
+          chrome.tabs.sendMessage(
+            tabs[0].id!,
+            { action: 'getState' },
+            (response) => {
+              if (response) {
+                setFocusModeEnabled(response.enabled);
+              }
             }
-          }
-        );
-      }
-      
-      // Also check stored state
-      chrome.storage.local.get(['focusModeEnabled'], (result) => {
-        if (result.focusModeEnabled !== undefined) {
-          setFocusModeEnabled(result.focusModeEnabled);
+          );
         }
+        
+        // Also check stored state
+        chrome.storage.local.get(['focusModeEnabled'], (result) => {
+          if (result.focusModeEnabled !== undefined) {
+            setFocusModeEnabled(result.focusModeEnabled);
+          }
+        });
       });
-    });
+    } else {
+      // In development environment, simulate LinkedIn for UI testing
+      console.log('Development environment detected, simulating LinkedIn');
+      setIsLinkedIn(true);
+    }
   }, []);
 
   const handleToggleFocusMode = (enabled: boolean) => {
     setFocusModeEnabled(enabled);
     
-    // Save state
-    chrome.storage.local.set({ focusModeEnabled: enabled });
-    
-    // Send message to content script
-    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-      if (tabs[0]?.id && isLinkedIn) {
-        chrome.tabs.sendMessage(
-          tabs[0].id,
-          { action: 'toggleFocusMode', enabled },
-          (response) => {
-            console.log('Focus mode toggled:', response);
-          }
-        );
-      }
-    });
+    // Only interact with Chrome APIs in extension environment
+    if (isExtensionEnvironment) {
+      // Save state
+      chrome.storage.local.set({ focusModeEnabled: enabled });
+      
+      // Send message to content script
+      chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+        if (tabs[0]?.id && isLinkedIn) {
+          chrome.tabs.sendMessage(
+            tabs[0].id,
+            { action: 'toggleFocusMode', enabled },
+            (response) => {
+              console.log('Focus mode toggled:', response);
+            }
+          );
+        }
+      });
+    } else {
+      console.log('Focus mode toggled in development:', enabled);
+    }
   };
 
   return (
@@ -75,7 +91,9 @@ const ExtensionPopup: React.FC = () => {
           />
         ) : (
           <p className="text-sm text-muted-foreground">
-            Navigate to LinkedIn to activate focus mode
+            {isExtensionEnvironment 
+              ? "Navigate to LinkedIn to activate focus mode" 
+              : "Development mode: Simulating LinkedIn environment"}
           </p>
         )}
       </CardContent>
