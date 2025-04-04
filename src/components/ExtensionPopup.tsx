@@ -12,7 +12,7 @@ const ExtensionPopup: React.FC = () => {
   // Check if we're in a Chrome extension environment
   useEffect(() => {
     // Check if chrome.tabs is available (extension environment)
-    if (typeof chrome !== 'undefined' && chrome.tabs) {
+    if (typeof window !== 'undefined' && window.chrome && chrome.tabs) {
       setIsExtensionEnvironment(true);
       
       // Only run Chrome API code if we're in an extension environment
@@ -51,7 +51,7 @@ const ExtensionPopup: React.FC = () => {
     setFocusModeEnabled(enabled);
     
     // Only interact with Chrome APIs in extension environment
-    if (isExtensionEnvironment) {
+    if (isExtensionEnvironment && window.chrome) {
       // Save state
       chrome.storage.local.set({ focusModeEnabled: enabled });
       
