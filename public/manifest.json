@@ -1,7 +1,7 @@
 
 {
   "manifest_version": 3,
-  "name": "LinkedIn Zen Zone",
+  "name": "LinkedIn Focus Mode",
   "version": "1.0.0",
   "description": "Remove distractions from LinkedIn to focus on posting content",
   "action": {

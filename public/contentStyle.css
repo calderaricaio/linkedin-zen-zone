@@ -32,6 +32,13 @@ body.linkedin-zen-mode::before {
   display: none !important;
 }
 
+/* Hide the left sidebar */
+.linkedin-zen-mode .scaffold-layout__sidebar,
+.linkedin-zen-mode .artdeco-card.pv3,
+.linkedin-zen-mode .left-rail {
+  display: none !important;
+}
+
 /* Hide notification feed and other distracting elements */
 .linkedin-zen-mode .notifications-tab,
 .linkedin-zen-mode .msg-overlay-container,
@@ -60,6 +67,22 @@ body.linkedin-zen-mode::before {
   max-width: 700px !important;
 }
 
+/* Inspirational quote banner */
+.linkedin-focus-quote {
+  display: block;
+  margin: 20px auto;
+  width: 80%;
+  max-width: 700px;
+  padding: 15px;
+  background-color: #f3f6f8;
+  border-left: 4px solid #0A66C2;
+  font-style: italic;
+  color: #666;
+  text-align: center;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  border-radius: 4px;
+}
+
 /* Additional selectors for feed items (LinkedIn may use different class names) */
 .linkedin-zen-mode .feed-shared-update-v2__description-wrapper,
 .linkedin-zen-mode .update-components-actor,
@@ -80,4 +103,64 @@ body.linkedin-zen-mode::before {
 .linkedin-zen-mode .feed-shared-poll,
 .linkedin-zen-mode .feed-shared-text {
   display: none !important;
+}
+
+/* Style for the toggle switch in bottom corner */
+.linkedin-focus-toggle {
+  position: fixed;
+  bottom: 10px;
+  right: 10px;
+  display: flex;
+  align-items: center;
+  background-color: rgba(10, 102, 194, 0.8);
+  color: white;
+  padding: 5px 10px;
+  border-radius: 5px;
+  font-size: 12px;
+  z-index: 9999;
+  cursor: pointer;
+  user-select: none;
+}
+
+.linkedin-focus-toggle-text {
+  margin-right: 8px;
+}
+
+.linkedin-focus-toggle-switch {
+  position: relative;
+  display: inline-block;
+  width: 30px;
+  height: 16px;
+}
+
+.linkedin-focus-toggle-slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  transition: .4s;
+  border-radius: 16px;
+}
+
+.linkedin-focus-toggle-slider:before {
+  position: absolute;
+  content: "";
+  height: 12px;
+  width: 12px;
+  left: 2px;
+  bottom: 2px;
+  background-color: white;
+  transition: .4s;
+  border-radius: 50%;
+}
+
+.linkedin-focus-toggle.active .linkedin-focus-toggle-slider {
+  background-color: #2196F3;
+}
+
+.linkedin-focus-toggle.active .linkedin-focus-toggle-slider:before {
+  transform: translateX(14px);
 }
